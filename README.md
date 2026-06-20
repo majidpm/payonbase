@@ -96,6 +96,7 @@ VITE_SUPABASE_ANON_KEY=your-supabase-anon-key
 
 ```
 ### Project Structure
+```
 
  payonbase24/
 ├── src/
@@ -120,7 +121,7 @@ VITE_SUPABASE_ANON_KEY=your-supabase-anon-key
 ├── tailwind.config.js
 ├── vite.config.js
 └── README.md
-
+```
 ###  Database Schema
 ```
 
