@@ -95,33 +95,6 @@ VITE_SUPABASE_URL=https://your-project.supabase.co
 VITE_SUPABASE_ANON_KEY=your-supabase-anon-key
 
 ```
-### Project Structure
-```
-
- payonbase24/
-├── src/
-│   ├── components/
-│   │   └── Navbar.jsx          # Navigation bar
-│   ├── contexts/
-│   │   └── ThemeContext.jsx    # Dark/Light mode context
-│   ├── pages/
-│   │   ├── Create.jsx          # Create payment link
-│   │   ├── Dashboard.jsx       # User dashboard
-│   │   ├── Pay.jsx             # Payment page
-│   │   ├── Auth.jsx            # Login/Signup
-│   │   ├── Landing.jsx         # Landing page
-│   │   └── Settings.jsx        # User settings
-│   ├── lib/
-│   │   └── supabase.js         # Supabase client
-│   ├── App.jsx                 # Main app component
-│   └── main.jsx                # Entry point
-├── public/
-├── index.html
-├── package.json
-├── tailwind.config.js
-├── vite.config.js
-└── README.md
-```
 ###  Database Schema
 ```
 
