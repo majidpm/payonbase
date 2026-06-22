@@ -32,19 +32,19 @@ export default function AuthPage() {
     }
   }
 
-  async function signInWithGoogle() {
-    try {
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: 'google',
-        options: {
-          redirectTo: window.location.origin
-        }
-      });
-      if (error) throw error;
-    } catch (err) {
-      alert(err.message);
-    }
+async function signInWithGoogle() {
+  try {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: 'https://payonbase24.vercel.app'  // ← آدرس Vercel
+      }
+    });
+    if (error) throw error;
+  } catch (err) {
+    alert(err.message);
   }
+}
 
   return (
     <div className={`min-h-screen flex items-center justify-center p-4 transition-colors duration-300 ${
