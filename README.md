@@ -484,4 +484,8 @@ Lines of Code: 5000+
 Made with ❤️ on Base Network
 
 
+<<<<<<< HEAD
 PayOnBase24 — The future of crypto payments is here! 🚀
+=======
+PayOnBase24 — The future of crypto payments is here! 🚀
+>>>>>>> 9429a9ec206b4f4dcca6f2fd9d5f43904219c4f1
