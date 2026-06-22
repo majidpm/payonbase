@@ -19,14 +19,11 @@ export default function Create() {
       setAddressError('');
       return true;
     }
-
     const baseAddressRegex = /^0x[a-fA-F0-9]{40}$/;
-    
     if (!baseAddressRegex.test(address)) {
       setAddressError('Invalid address');
       return false;
     }
-
     setAddressError('');
     return true;
   };
@@ -42,37 +39,29 @@ export default function Create() {
       alert('Please enter wallet address and amount');
       return;
     }
-
     if (!validateAddress(to)) {
       return;
     }
-
     try {
       setLoading(true);
       const { data: { user: currentUser } } = await supabase.auth.getUser();
-      
       if (!currentUser) {
         alert('Please login');
         return;
       }
-
       const slug = uuidv4().slice(0, 8);
-
       const { error } = await supabase
         .from('payment')
-        .insert({ 
-          slug, 
-          recipient: to, 
+        .insert({
+          slug,
+          recipient: to,
           amount,
-          user_id: currentUser.id 
+          user_id: currentUser.id
         });
-
       if (error) throw error;
-
       const link = `${window.location.origin}/pay/${slug}`;
       await navigator.clipboard.writeText(link);
       navigate(`/pay/${slug}`);
-
     } catch (err) {
       alert('Failed to create link');
     } finally {
@@ -85,27 +74,24 @@ export default function Create() {
       isDark ? 'bg-gray-950' : 'bg-blue-50'
     }`}>
       <Navbar />
-
-      <div className="max-w-md w-full mx-auto pt-16 pb-20 px-4">
-        <div className="text-center mb-10">
-          <h1 className={`text-5xl font-bold mb-4 transition-colors duration-300 ${
+      <div className="max-w-md w-full mx-auto pt-8 sm:pt-16 pb-20 px-4">
+        <div className="text-center mb-8 sm:mb-10">
+          <h1 className={`text-3xl sm:text-5xl font-bold mb-4 transition-colors duration-300 ${
             isDark ? 'text-white' : 'text-gray-900'
           }`}>
             Send USDC Instantly
           </h1>
-          <p className={`text-xl transition-colors duration-300 ${
+          <p className={`text-base sm:text-xl transition-colors duration-300 ${
             isDark ? 'text-gray-400' : 'text-gray-600'
           }`}>
             Create secure payment links on Base Network
           </p>
         </div>
 
-        <div className={`rounded-3xl shadow-xl p-8 border transition-colors duration-300 ${
-          isDark 
-            ? 'bg-gray-900 border-gray-800' 
-            : 'bg-white border-blue-100'
+        <div className={`rounded-3xl shadow-xl p-4 sm:p-8 border transition-colors duration-300 ${
+          isDark ? 'bg-gray-900 border-gray-800' : 'bg-white border-blue-100'
         }`}>
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6">
             <div>
               <div className="flex items-center gap-2 mb-2">
                 <label className={`block text-sm font-medium transition-colors duration-300 ${
@@ -113,8 +99,7 @@ export default function Create() {
                 }`}>
                   Recipient Wallet Address
                 </label>
-                
-                <div 
+                <div
                   className="relative inline-flex items-center"
                   onMouseEnter={() => setShowTooltip(true)}
                   onMouseLeave={() => setShowTooltip(false)}
@@ -124,11 +109,10 @@ export default function Create() {
                   }`}>
                     ⚠️
                   </span>
-                  
                   {showTooltip && (
                     <div className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-4 py-2.5 rounded-xl text-xs z-50 shadow-lg transition-all duration-200 min-w-[220px] text-center ${
-                      isDark 
-                        ? 'bg-gray-800 text-gray-200 border border-gray-700' 
+                      isDark
+                        ? 'bg-gray-800 text-gray-200 border border-gray-700'
                         : 'bg-white text-gray-700 border border-gray-200 shadow-gray-200'
                     }`}>
                       <p className="font-medium">⚠️ Important</p>
@@ -145,18 +129,17 @@ export default function Create() {
                   )}
                 </div>
               </div>
-
               <input
                 type="text"
                 placeholder="0x1234567890abcdef..."
                 value={to}
                 onChange={handleAddressChange}
-                className={`w-full px-5 py-4 border rounded-2xl focus:outline-none text-lg transition-colors duration-300 ${
+                className={`w-full px-4 sm:px-5 py-3 sm:py-4 border rounded-2xl focus:outline-none text-base sm:text-lg transition-colors duration-300 ${
                   addressError
                     ? 'border-red-500 focus:border-red-600 ring-2 ring-red-500/20'
-                    : isDark 
-                      ? 'bg-gray-800 border-gray-700 text-white placeholder-gray-500 focus:border-blue-500' 
-                      : 'bg-white border-blue-200 text-gray-900 placeholder-gray-400 focus:border-blue-600'
+                    : isDark
+                    ? 'bg-gray-800 border-gray-700 text-white placeholder-gray-500 focus:border-blue-500'
+                    : 'bg-white border-blue-200 text-gray-900 placeholder-gray-400 focus:border-blue-600'
                 }`}
               />
             </div>
@@ -173,9 +156,9 @@ export default function Create() {
                 placeholder="0.00"
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
-                className={`w-full px-5 py-4 border rounded-2xl focus:outline-none text-lg transition-colors duration-300 ${
-                  isDark 
-                    ? 'bg-gray-800 border-gray-700 text-white placeholder-gray-500 focus:border-blue-500' 
+                className={`w-full px-4 sm:px-5 py-3 sm:py-4 border rounded-2xl focus:outline-none text-base sm:text-lg transition-colors duration-300 ${
+                  isDark
+                    ? 'bg-gray-800 border-gray-700 text-white placeholder-gray-500 focus:border-blue-500'
                     : 'bg-white border-blue-200 text-gray-900 placeholder-gray-400 focus:border-blue-600'
                 }`}
               />
@@ -184,7 +167,7 @@ export default function Create() {
             <button
               onClick={createLink}
               disabled={loading || !to || !amount || !!addressError}
-              className={`w-full font-semibold py-4 rounded-2xl text-lg transition-all duration-300 ${
+              className={`w-full font-semibold py-3 sm:py-4 rounded-2xl text-base sm:text-lg transition-all duration-300 ${
                 isDark
                   ? 'bg-blue-500 hover:bg-blue-600 disabled:bg-gray-700 text-white'
                   : 'bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white'

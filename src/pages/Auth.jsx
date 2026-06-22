@@ -14,7 +14,6 @@ export default function AuthPage() {
   async function handleAuth(e) {
     e.preventDefault();
     setLoading(true);
-
     try {
       if (isLogin) {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
@@ -51,16 +50,16 @@ export default function AuthPage() {
     <div className={`min-h-screen flex items-center justify-center p-4 transition-colors duration-300 ${
       isDark ? 'bg-gray-950' : 'bg-blue-50'
     }`}>
-      <div className={`max-w-md w-full rounded-3xl shadow-xl p-8 transition-colors duration-300 ${
+      <div className={`max-w-md w-full rounded-3xl shadow-xl p-6 sm:p-8 transition-colors duration-300 ${
         isDark ? 'bg-gray-900' : 'bg-white'
       }`}>
-        <div className="text-center mb-8">
-          <h1 className={`text-4xl font-bold transition-colors duration-300 ${
+        <div className="text-center mb-6 sm:mb-8">
+          <h1 className={`text-3xl sm:text-4xl font-bold transition-colors duration-300 ${
             isDark ? 'text-white' : 'text-gray-900'
           }`}>
             PayOnBase24
           </h1>
-          <p className={`mt-2 transition-colors duration-300 ${
+          <p className={`mt-2 text-sm sm:text-base transition-colors duration-300 ${
             isDark ? 'text-gray-400' : 'text-gray-500'
           }`}>
             {isLogin ? 'Sign in to continue' : 'Create a new account'}
@@ -70,7 +69,7 @@ export default function AuthPage() {
         {/* دکمه Google */}
         <button
           onClick={signInWithGoogle}
-          className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-4 rounded-2xl text-lg transition-all flex items-center justify-center gap-2"
+          className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-3 sm:py-4 rounded-2xl text-base sm:text-lg transition-all flex items-center justify-center gap-2"
         >
           <svg className="w-5 h-5" viewBox="0 0 24 24">
             <path fill="white" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/>
@@ -100,7 +99,7 @@ export default function AuthPage() {
         </div>
 
         {/* فرم ایمیل و رمز عبور */}
-        <form onSubmit={handleAuth} className="space-y-6">
+        <form onSubmit={handleAuth} className="space-y-4 sm:space-y-6">
           <div>
             <label className={`block text-sm font-medium mb-2 transition-colors duration-300 ${
               isDark ? 'text-gray-300' : 'text-gray-700'
@@ -111,15 +110,14 @@ export default function AuthPage() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className={`w-full px-5 py-4 border rounded-2xl focus:outline-none text-lg transition-colors duration-300 ${
-                isDark 
-                  ? 'bg-gray-800 border-gray-700 text-white placeholder-gray-500 focus:border-blue-500' 
+              className={`w-full px-4 sm:px-5 py-3 sm:py-4 border rounded-2xl focus:outline-none text-base sm:text-lg transition-colors duration-300 ${
+                isDark
+                  ? 'bg-gray-800 border-gray-700 text-white placeholder-gray-500 focus:border-blue-500'
                   : 'bg-white border-gray-200 text-gray-900 placeholder-gray-400 focus:border-blue-600'
               }`}
               required
             />
           </div>
-
           <div>
             <label className={`block text-sm font-medium mb-2 transition-colors duration-300 ${
               isDark ? 'text-gray-300' : 'text-gray-700'
@@ -130,19 +128,18 @@ export default function AuthPage() {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className={`w-full px-5 py-4 border rounded-2xl focus:outline-none text-lg transition-colors duration-300 ${
-                isDark 
-                  ? 'bg-gray-800 border-gray-700 text-white placeholder-gray-500 focus:border-blue-500' 
+              className={`w-full px-4 sm:px-5 py-3 sm:py-4 border rounded-2xl focus:outline-none text-base sm:text-lg transition-colors duration-300 ${
+                isDark
+                  ? 'bg-gray-800 border-gray-700 text-white placeholder-gray-500 focus:border-blue-500'
                   : 'bg-white border-gray-200 text-gray-900 placeholder-gray-400 focus:border-blue-600'
               }`}
               required
             />
           </div>
-
           <button
             type="submit"
             disabled={loading}
-            className={`w-full font-semibold py-4 rounded-2xl text-lg transition-all duration-300 ${
+            className={`w-full font-semibold py-3 sm:py-4 rounded-2xl text-base sm:text-lg transition-all duration-300 ${
               isDark
                 ? 'bg-blue-500 hover:bg-blue-600 disabled:bg-gray-700 text-white'
                 : 'bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white'
@@ -154,7 +151,7 @@ export default function AuthPage() {
 
         <button
           onClick={() => setIsLogin(!isLogin)}
-          className={`w-full mt-4 transition-colors duration-300 ${
+          className={`w-full mt-4 text-sm sm:text-base transition-colors duration-300 ${
             isDark ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:underline'
           }`}
         >
