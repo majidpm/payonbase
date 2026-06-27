@@ -81,40 +81,52 @@ export default function Pay() {
     }
   }
 
-  async function handlePaymentSuccess(hash) {
-    try {
-      const finalAmount = parseFloat(link.amount || amount);
+async function handlePaymentSuccess(hash) {
+  try {
+    const finalAmount = parseFloat(link.amount || amount);
 
-      await supabase.from('payment').update({
-        status: 'paid',
-        payer_name: 'Anonymous',
-        payer_address: address,
-        paid_at: new Date().toISOString(),
-        tx_hash: hash
-      }).eq('id', link.id);
+    // ✅ 1. آپدیت وضعیت payment link
+    await supabase.from('payment').update({
+      status: 'paid',
+      payer_name: 'Anonymous',
+      payer_address: address,
+      paid_at: new Date().toISOString(),
+      tx_hash: hash
+    }).eq('id', link.id);
 
-      await supabase.from('donations').insert({
-        profile_id: link.user_id,
-        donor_address: address,
-        amount: finalAmount,
-        message: message.trim() || `Payment for: ${link.title}`,
-        tx_hash: hash,
-        verified: true
-      });
+    // ✅ 2. ذخیره در جدول payments (نه donations)
+    const { data, error } = await supabase.from('payment').insert({
+      pay_link_id: link.id,
+      profile_id: link.user_id,
+      payer_address: address,
+      payer_name: 'Anonymous',
+      amount: finalAmount,
+      message: message.trim() || `Payment for: ${link.title}`,
+      tx_hash: hash,
+      verified: true
+    }).select().single();
 
-      setPaymentComplete(true);
-      
-      showSuccess('Payment successful! Thank you! 🎉');
-      celebrateDonation();
-
-      setAmount('');
-      setMessage('');
-
-      await loadLink();
-    } catch (err) {
-      console.error('Error recording payment:', err);
+    if (error) {
+      console.error('❌ Failed to save payment:', error);
+      throw error;
     }
+
+    console.log('✅ Payment saved to payment table:', data);
+
+    setPaymentComplete(true);
+    
+    showSuccess('Payment successful! Thank you! 🎉');
+    celebrateDonation();
+
+    setAmount('');
+    setMessage('');
+
+    await loadLink();
+  } catch (err) {
+    console.error('❌ Error recording payment:', err);
+    handleAppError(err, 'recordPayment');
   }
+}
 
   async function handlePay() {
     if (!link || !address) return;
