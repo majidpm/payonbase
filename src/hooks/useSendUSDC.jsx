@@ -1,43 +1,56 @@
 import { useWriteContract, useWaitForTransactionReceipt } from 'wagmi'
 import { parseUnits } from 'viem'
-import { USDC_ADDRESS } from './useUSDCBalance'
+import { base } from 'wagmi/chains'
 
-const USDC_ABI = [
+// ✅ Builder Code از Base
+const BUILDER_CODE = 'bc_3mjjig8s'
+
+// USDC Contract Address on Base
+const USDC_ADDRESS = '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913'
+
+// ERC20 ABI (فقط تابع transfer)
+const ERC20_ABI = [
   {
     name: 'transfer',
     type: 'function',
     stateMutability: 'nonpayable',
     inputs: [
       { name: 'to', type: 'address' },
-      { name: 'amount', type: 'uint256' },
+      { name: 'amount', type: 'uint256' }
     ],
-    outputs: [{ name: '', type: 'bool' }],
-  },
+    outputs: [{ name: '', type: 'bool' }]
+  }
 ]
 
 export function useSendUSDC() {
-  const {
-    data: hash,
-    writeContract,
-    isPending: isWritePending,
-    error: writeError,
-    reset: resetWrite,
+  const { 
+    writeContract, 
+    data: txHash, 
+    isPending, 
+    isError, 
+    error,
+    reset 
   } = useWriteContract()
 
-  const {
-    isLoading: isConfirming,
-    isSuccess,
-    isError: isReceiptError,
-    error: receiptError,
-  } = useWaitForTransactionReceipt({ hash })
+  const { 
+    isLoading: isConfirming, 
+    isSuccess 
+  } = useWaitForTransactionReceipt({ 
+    hash: txHash 
+  })
 
   async function sendUSDC(to, amount) {
     try {
+      const amountInWei = parseUnits(amount.toString(), 6) // USDC has 6 decimals
+
       writeContract({
         address: USDC_ADDRESS,
-        abi: USDC_ABI,
+        abi: ERC20_ABI,
         functionName: 'transfer',
-        args: [to, parseUnits(amount.toString(), 6)],
+        args: [to, amountInWei],
+        chainId: base.id,
+        // ✅ Builder Code برای شناسایی سازنده
+        builder: BUILDER_CODE
       })
     } catch (err) {
       console.error('Send USDC error:', err)
@@ -45,20 +58,14 @@ export function useSendUSDC() {
     }
   }
 
-  function reset() {
-    if (resetWrite) {
-      resetWrite()
-    }
-  }
-
   return {
     sendUSDC,
-    txHash: hash,
-    isPending: isWritePending,
+    txHash,
+    isPending,
     isConfirming,
     isSuccess,
-    isError: writeError || isReceiptError,
-    error: writeError || receiptError,
-    reset,
+    isError,
+    error,
+    reset
   }
 }

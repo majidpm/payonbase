@@ -6,6 +6,9 @@ import App from './App.jsx'
 import { config, queryClient } from './lib/wagmi'
 import './index.css'
 
+// ✅ Import Builder Configuration
+import './lib/baseBuilder'
+
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <WagmiProvider config={config}>
