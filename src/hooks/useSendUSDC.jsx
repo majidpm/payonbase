@@ -1,5 +1,5 @@
 import { useWriteContract, useWaitForTransactionReceipt } from 'wagmi'
-import { parseUnits, toHex } from 'viem'
+import { parseUnits, stringToHex } from 'viem'
 import { base } from 'wagmi/chains'
 
 // ✅ Builder Code از Base
@@ -24,21 +24,27 @@ const ERC20_ABI = [
 
 // ✅ ساخت dataSuffix بر اساس ERC-8021
 function buildDataSuffix(builderCode) {
-  // تبدیل builder code به hex
-  const hexCode = toHex(builderCode).slice(2) // حذف '0x'
+  // 1. تبدیل builder code به hex با استفاده از stringToHex
+  const hexCode = stringToHex(builderCode).slice(2)
   
-  // طول builder code در hex
-  const lengthByte = builderCode.length.toString(16).padStart(2, '0')
+  // 2. طول builder code در hex (2 کاراکتر)
+  const lengthHex = builderCode.length.toString(16).padStart(2, '0')
   
-  // 8 بار 8021 (ERC-8021 identifier)
-  const suffix = '8021'.repeat(8)
+  // 3. 8 بار 8021 (ERC-8021 identifier)
+  const erc8021 = '8021'.repeat(8)
   
-  // فرمت نهایی: 0x + length + hex_code + 00 + suffix
-  return `0x${lengthByte}${hexCode}00${suffix}`
+  // ✅ فرمت نهایی: length + hex_code + 00 + identifier
+  const dataSuffix = `0x${lengthHex}${hexCode}00${erc8021}`
+  
+  console.log('🔧 Builder Code:', builderCode)
+  console.log('🔧 Length:', builderCode.length, '(hex:', lengthHex + ')')
+  console.log('🔧 Hex Code:', hexCode)
+  console.log('🔧 Full Suffix:', dataSuffix)
+  
+  return dataSuffix
 }
 
 const DATA_SUFFIX = buildDataSuffix(BUILDER_CODE)
-console.log('🔧 Builder Data Suffix:', DATA_SUFFIX)
 
 export function useSendUSDC() {
   const { 
@@ -59,7 +65,12 @@ export function useSendUSDC() {
 
   async function sendUSDC(to, amount) {
     try {
-      const amountInWei = parseUnits(amount.toString(), 6) // USDC has 6 decimals
+      const amountInWei = parseUnits(amount.toString(), 6)
+
+      console.log('📤 Sending USDC...')
+      console.log('  To:', to)
+      console.log('  Amount:', amount)
+      console.log('  Data Suffix:', DATA_SUFFIX)
 
       writeContract({
         address: USDC_ADDRESS,
@@ -67,7 +78,6 @@ export function useSendUSDC() {
         functionName: 'transfer',
         args: [to, amountInWei],
         chainId: base.id,
-        // ✅ اضافه کردن Builder Code به data تراکنش
         dataSuffix: DATA_SUFFIX
       })
     } catch (err) {
